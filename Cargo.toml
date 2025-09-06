@@ -1,5 +1,5 @@
 [package]
-name = "rust-game-engine"
+name = "rust-pong"
 version = "0.1.0"
 edition = "2024"
 
