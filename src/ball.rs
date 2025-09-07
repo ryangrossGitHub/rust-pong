@@ -33,11 +33,11 @@ impl Ball {
         self.dir_y = Direction::Down;
     }
 
-    pub fn update(&mut self, screen_height: f32, player1: &mut HumanPlayer, bot: &mut BotPlayer) {
+    pub fn update(&mut self, screen_height: f32, player1: &mut HumanPlayer, bot: &mut BotPlayer, delta_time: f32) {
         self.update_dir_x(player1, bot);
         self.update_dir_y(screen_height);
-        self.update_x();
-        self.update_y();
+        self.update_x(delta_time);
+        self.update_y(delta_time);
     }
 
     fn update_dir_x(&mut self, player1: &mut HumanPlayer, bot: &mut BotPlayer) {
@@ -51,12 +51,12 @@ impl Ball {
     }
 
     fn collision_with_player(&self, player: &mut HumanPlayer) -> bool {
-        return self.x == RADIUS + human_player::X + player::WIDTH && 
+        return self.x <= RADIUS + human_player::X + player::WIDTH && self.x > human_player::X + RADIUS && 
             self.y >= player.player().y() && self.y <= player.player().y() + player::HEIGHT
     }
 
     fn collision_with_bot(&self, bot: &mut BotPlayer) -> bool {
-        return self.x == bot.x() - player::WIDTH - RADIUS && 
+        return self.x >= bot.x() - player::WIDTH - RADIUS && self.x < bot.x() - RADIUS &&
             self.y >= bot.player().y() && self.y <= bot.player().y() + player::HEIGHT
     }
 
@@ -70,18 +70,18 @@ impl Ball {
         }
     }
 
-    fn update_x(&mut self) {
+    fn update_x(&mut self, delta_time: f32) {
         match self.dir_x {
-            Direction::Left => self.x -= self.speed,
-            Direction::Right => self.x += self.speed,
+            Direction::Left => self.x -= self.speed * delta_time,
+            Direction::Right => self.x += self.speed * delta_time,
             _ => {}
         }
     }
 
-    fn update_y(&mut self) {
+    fn update_y(&mut self, delta_time: f32) {
         match self.dir_y {
-            Direction::Up => self.y -= self.speed,
-            Direction::Down => self.y += self.speed,
+            Direction::Up => self.y -= self.speed * delta_time,
+            Direction::Down => self.y += self.speed * delta_time,
             _ => {}
         }
     }

@@ -1,7 +1,7 @@
 use crate::players::player::{self, Player};
 
 const X_OFFSET: f32 = 20.0;
-const SPEED: f32 = 0.4;
+const SPEED: f32 = 275.0;
 
 pub struct BotPlayer {
     player: Player,
@@ -25,13 +25,13 @@ impl BotPlayer {
         self.x = screen_width - X_OFFSET;
     }
 
-    pub fn update_y(&mut self, screen_height: f32, ball_y: f32) {
+    pub fn update_y(&mut self, screen_height: f32, ball_y: f32, delta_time: f32) {
         if self.player.y() < screen_height - player::HEIGHT && 
             ball_y > self.player.y() + player::HEIGHT / 2.0 {
-                self.player.add_y(SPEED);
+                self.player.add_y(SPEED * delta_time);
         } else if self.player.y() > 0.0 && 
             ball_y < self.player.y() + player::HEIGHT / 2.0 {
-                self.player.subtract_y(SPEED);
+                self.player.subtract_y(SPEED * delta_time);
         }
     }
 }

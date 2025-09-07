@@ -12,8 +12,9 @@ use crate::players::bot_player::BotPlayer;
 
 mod score_board;
 
-#[macroquad::main("InputKeys")]
+#[macroquad::main("InputKeys", "Time-based movement")]
 async fn main() {
+    let mut delta_time: f32;
     let mut screen_width_val: f32 = screen_width();
     let mut screen_height_val: f32 = screen_height();
 
@@ -23,12 +24,13 @@ async fn main() {
     let mut ball: Ball = Ball::new(
         screen_width_val / 2.0,
         screen_height_val / 2.0,
-        0.5,
+        300.0,
         Direction::Right,
         Direction::Down
     );
 
     loop {
+        delta_time = get_frame_time();
         if is_key_down(KeyCode::Escape) {
             break;
         } 
@@ -38,10 +40,10 @@ async fn main() {
 
         clear_background(BLACK);
 
-        player1.update(screen_height_val);
+        player1.update(screen_height_val, delta_time);
         bot.update_x(screen_width_val);
-        bot.update_y(screen_height_val, ball.y());
-        ball.update(screen_height_val, &mut player1, &mut bot);
+        bot.update_y(screen_height_val, ball.y(), delta_time);
+        ball.update(screen_height_val, &mut player1, &mut bot, delta_time);
 
         if ball.x() <= 0.0 {
             bot.player().increment_score();
